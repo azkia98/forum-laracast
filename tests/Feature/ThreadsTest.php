@@ -7,33 +7,61 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Thread;
+use App\Reply;
 
 class ThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    private $thread;
+
+
+    public function setUp() :void
+    {
+       parent::setUp();
+
+
+       $this->thread = factory(Thread::class)->create();
+        
+    }
 
     /** @test */
     public function a_user_can_browse_threads()
     {
 
-        $thread = factory(Thread::class)->create();
 
         $response = $this->get('/threads');
 
         $response->assertStatus(200);
 
-        $response->assertSee($thread->title);
-
-
+        $response->assertSee($this->thread->title);
     }
 
 
     /** @test */
-    public function a_user_can_read_a_single_thread(){
-        $thread = factory(Thread::class)->create();
+    public function a_user_can_read_a_single_thread()
+    {
+
+        $response = $this->get('/threads/' . $this->thread->id);
+        $response->assertSee($this->thread->title);
+    }
+
+
+    /**
+     * @test
+     */
+    public function a_user_can_read_replies_that_are_associated_with_a_thread()
+    { 
+
+        $reply = factory(Reply::class)->create(['thread_id' => $this->thread->id]);
+
         
-        $response = $this->get('/threads/'.$thread->id);
-        $response->assertSee($thread->title); 
+        $response = $this->get('/threads/' . $this->thread->id);
+
+        $response->assertSee($reply->body);
+
+        
+
+        
     }
 }
