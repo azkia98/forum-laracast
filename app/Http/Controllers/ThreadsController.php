@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
+
+
+    /**
+     * ThreadsController constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->only('store');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +27,7 @@ class ThreadsController extends Controller
     {
         $threads = Thread::latest()->get();
 
-        return view('threads.index',compact('threads')); 
+        return view('threads.index', compact('threads'));
     }
 
     /**
@@ -37,7 +48,14 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $thread = Thread::create([
+            'body' => $request->body,
+            'title' => $request->title,
+            'user_id' => auth()->id()
+        ]);
+
+
+        return redirect($thread->path());
     }
 
     /**
@@ -48,7 +66,7 @@ class ThreadsController extends Controller
      */
     public function show(Thread $thread)
     {
-        return view('threads.show',compact('thread'));
+        return view('threads.show', compact('thread'));
     }
 
     /**
