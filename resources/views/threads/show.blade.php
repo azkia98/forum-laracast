@@ -5,7 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Thread</div>
+                <div class="card-header">
+                    <a href="#">{{ $thread->creator->name }}</a> posted at: {{ $thread->created_at }}
+                </div>
 
                 <div class="card-body">
                     <article>
