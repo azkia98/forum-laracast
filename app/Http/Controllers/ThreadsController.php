@@ -49,6 +49,14 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels,id',
+        ]);
+
+
         $thread = Thread::create([
             'body' => $request->body,
             'title' => $request->title,
