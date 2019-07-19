@@ -43,9 +43,11 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 @foreach ($channels as $channel)
                                 <a class="dropdown-item " href="{{ url('/threads/'.$channel->slug) }}">{{ $channel->name }}</a>
-                                    
                                 @endforeach
                             </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/threads/create') }}">New Thread</a>
                         </li>
                         
                         

@@ -15,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        View::composer('*', function ($view) {
+        View::composer('*', function ($view) { 
+            // auth()->loginUsingId(1,true);
             $view->with('channels',Channel::all());
         });
     }
