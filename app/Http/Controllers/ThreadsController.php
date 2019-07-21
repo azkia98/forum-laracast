@@ -30,26 +30,7 @@ class ThreadsController extends Controller
     {
 
 
-        if ($channel->exists) {
-            $threads = Thread::where('channel_id', $channel->id)->latest();
-        } else {
-            $threads = Thread::latest();
-        }
-
-
-        // if (request()->exists('by')) {
-        //     $username = request('by');
-        //     $user = User::where('name', $username)->firstOrFail();
-
-        //     $threads->where('user_id', $user->id);
-        // }
-
-        $threads = $threads->filter($filters)->get();
-
-
-        // $threads = Thread::filter($filters)->get();
-
-        // $threads = $this->getThreads($channel);
+        $threads = $this->getThreads($channel,$filters);
 
         return view('threads.index', compact('threads'));
     }
@@ -99,7 +80,10 @@ class ThreadsController extends Controller
      */
     public function show($channel, Thread $thread)
     {
-        return view('threads.show', compact('thread'));
+        return view('threads.show', [
+            'thread' => $thread,
+            'replies' => $thread->replies()->paginate(20)
+        ]);
     }
 
     /**
@@ -137,6 +121,16 @@ class ThreadsController extends Controller
     }
 
 
-    public function getThreads($channel)
-    { }
+    public function getThreads($channel, $filters)
+    {
+
+        $threads = Thread::Latest()->filter($filters);
+
+        if ($channel->exists) {
+            $threads = Thread::where('channel_id', $channel->id);
+        }
+
+        return $threads->get();
+
+    }
 }

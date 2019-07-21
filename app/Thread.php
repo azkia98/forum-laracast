@@ -15,6 +15,16 @@ class Thread extends Model
     protected $guarded = [];
 
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+    }
+
+
     public function path()
     {
         return url("/threads/{$this->channel->slug}/{$this->id}");
@@ -46,4 +56,10 @@ class Thread extends Model
     {
         return $filters->apply($query);
     }
+
+
+    // public function getReplyCountAttribute()
+    // {
+    //     return $this->replies()->count();
+    // }
 }
