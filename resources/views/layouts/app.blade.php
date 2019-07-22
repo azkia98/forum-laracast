@@ -41,6 +41,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 
                                 <a class="dropdown-item " href="{{ url('threads') }}">All Threads</a>
+                                <a class="dropdown-item " href="{{ url('threads?popular=1') }}">Popular Threads</a>
                                 @auth
                                     <a class="dropdown-item " href="{{ url('/threads/'. '?by='. auth()->user()->name) }}">My Threads</a>
                                 @endauth
@@ -54,7 +55,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 @foreach ($channels as $channel)
-                                <a class="dropdown-item " href="{{ url('/threads/'.$channel->slug) }}">{{ $channel->name }}</a>
+                                    <a class="dropdown-item " href="{{ url('/threads/'.$channel->slug) }}">{{ $channel->name }}</a>
                                 @endforeach
                             </div>
                         </li>

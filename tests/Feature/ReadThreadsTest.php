@@ -63,7 +63,7 @@ class ReadThreadsTest extends TestCase
     public function a_user_can_filter_threads_according_to_a_channel()
     {
         $channel = create('App\Channel');
-        $threadInChannel = create('App\Thread',['channel_id' => $channel->id]);
+        $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
         $threadNotInChannel = create('App\Thread');
 
 
@@ -76,16 +76,38 @@ class ReadThreadsTest extends TestCase
 
 
     /** @test */
-    public function a_user_can_filter_threads_by_any_username(){
-        $this->signIn(create('App\User',['name' => 'mahdi']));
+    public function a_user_can_filter_threads_by_any_username()
+    {
+        $this->signIn(create('App\User', ['name' => 'mahdi']));
 
         $this->withoutExceptionHandling();
-        $threadByMahdi = create('App\Thread',['user_id' => auth()->id()]);
+        $threadByMahdi = create('App\Thread', ['user_id' => auth()->id()]);
         $threadNotByMahdi = create('App\Thread');
 
         $this->get('/threads?by=mahdi')
-        ->assertSee($threadByMahdi->title)
-        ->assertDontSee($threadNotByMahdi->title);
+            ->assertSee($threadByMahdi->title)
+            ->assertDontSee($threadNotByMahdi->title);
+    }
 
+
+
+    /** @test */
+    public function a_user_can_filter_threads_by_populatiry()
+    {
+
+        $threadWithTwoReplies = create('App\Thread');
+        create('App\Reply',['thread_id' => $threadWithTwoReplies->id],2);
+
+
+        $threadWithThreeReplies = create('App\Thread');
+        create('App\Reply',['thread_id' => $threadWithThreeReplies->id],3);
+
+
+        $threadWithNoReplies = $this->thread;
+
+
+        $response  = $this->getJson('/threads?popular=1')->json();
+
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
 }

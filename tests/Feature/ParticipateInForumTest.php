@@ -16,6 +16,7 @@ class ParticipateInForumTest extends TestCase
     public function unauthenticated_users_may_not_add_replies()
     {
 
+        $this->withExceptionHandling();
         $thread = factory('App\Thread')->create();
         $reply = factory('App\Reply')->make();
 
@@ -45,6 +46,7 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function a_reply_requires_a_body()
     {
+        $this->withExceptionHandling();
         $this->signIn();
         $thread = factory('App\Thread')->create();
 

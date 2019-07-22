@@ -30,6 +30,7 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function guests_cannot_see_the_create_thread_page()
     {
+        $this->withExceptionHandling();
         $this->get('/threads/create')->assertRedirect('login');
         $this->post('/threads')->assertRedirect('login');
     }
@@ -38,6 +39,7 @@ class CreateThreadsTest extends TestCase
     public function a_thread_requires_a_title()
     {
 
+        $this->withExceptionHandling();
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
@@ -47,6 +49,7 @@ class CreateThreadsTest extends TestCase
     public function a_thread_requires_a_body()
     {
 
+        $this->withExceptionHandling();
         $this->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
@@ -57,6 +60,7 @@ class CreateThreadsTest extends TestCase
     public function a_thread_requires_a_valid_channel()
     {
 
+        $this->withExceptionHandling();
         factory('App\Channel',2)->create();
 
         $this->publishThread(['channel_id' => null])
