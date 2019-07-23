@@ -1,5 +1,5 @@
 <div class="card my-2">
-    <div class="card-header d-flex justify-content-between">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <div>
             <a href="{{ route('profiles', $reply->owner) }}">{{ $reply->owner->name }}</a>
             <span>said at </span>

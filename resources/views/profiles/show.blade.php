@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container-fluid">
+<div class="container">
     <div class="jumbotron ">
         <h1 class="display-4">{{ $profileUser->name }} <small class="font-italic text-muted">since {{ $profileUser->created_at->diffForHumans() }}</small></h1>
         <p class="lead">{{ $profileUser->email }}</p>

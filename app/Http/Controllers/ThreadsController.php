@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Channel;
 use App\User;
 use App\Filters\ThreadFilters;
+use Illuminate\Http\Response;
 
 class ThreadsController extends Controller
 {
@@ -122,9 +123,14 @@ class ThreadsController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
+    public function destroy($channel,Thread $thread)
     {
-        //
+        $thread->delete();
+
+        if(request()->wantsJson())
+            return response([],Response::HTTP_NO_CONTENT);
+
+        return redirect('/threads');
     }
 
 
