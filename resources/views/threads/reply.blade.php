@@ -1,7 +1,7 @@
 <div class="card my-2">
     <div class="card-header d-flex justify-content-between">
         <div>
-            <a href="#">{{ $reply->owner->name }}</a>
+            <a href="{{ route('profiles', $reply->owner) }}">{{ $reply->owner->name }}</a>
             <span>said at </span>
             <span>{{ $reply->created_at->diffForHumans() }}</span>
         </div>
@@ -9,7 +9,7 @@
             <form method="POST" action="{{ url("/replies/{$reply->id}/favorites") }}">
                 @csrf()
                 <button  type="submit" class="btn btn-outline-secondary btn-sm" {{ $reply->isFavorited() ? 'disabled' : '' }}>
-                    {{ str_plural('Favorite',$reply->favorites->count()) }} {{ $reply->favorites->count() }}
+                    {{ str_plural('Favorite',$reply->favorites_count) }} {{ $reply->favorites_count }}
                 </button>
             </form>
         </div>

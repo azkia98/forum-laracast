@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Channel;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,9 +16,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        View::composer('*', function ($view) { 
-            // auth()->loginUsingId(1,true);
-            $view->with('channels',Channel::all());
+        View::composer('*', function ($view) {
+
+            $channels = Cache::rememberForever('channels', function () {
+                return Channel::all();
+            });
+
+
+            $view->with('channels', $channels);
         });
     }
 
