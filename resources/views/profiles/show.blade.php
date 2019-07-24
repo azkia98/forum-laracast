@@ -10,23 +10,16 @@
     </div>
 
 
-    @foreach ($threads as $thread)
-        <div class="card mb-3">
-            <div class="card-header d-flex justify-content-between">
-              <a href="{{ $thread->path() }}">{{ $thread->title }}</a>  
-              <a href="{{ $thread->path() }}">{{ str_plural('reply',$thread->replies_count) }} {{ $thread->replies_count }}</a>
-            </div>
-            <div class="card-body">
-                <p class="card-text">{{ $thread->body }}</p>
-            </div>
-            {{--  <div class="card-footer">
-                Plublished At: {{ $thread->created_at->diffForHumans() }}
-            </div>  --}}
-        </div>
+    @foreach ($activities as $date => $activity)
+        <h4>{{ $date }}</h4> <hr>
+
+       @foreach ($activity as $record)
+            @include("profiles.activities.{$record->type}", ['activity' => $record])
+       @endforeach 
     @endforeach
 
     <div class="mt-3">
-        {{ $threads->links() }}
+        {{--  {{ $activities->links() }}  --}}
 
     </div>
 </div>
