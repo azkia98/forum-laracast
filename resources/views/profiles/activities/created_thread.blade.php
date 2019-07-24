@@ -2,7 +2,7 @@
     @slot('header')
 
         <div>
-            {{ $profileUser->name }} published a <a href="{{ $activity->subject->path() }}">thread</a>        
+            {{ $profileUser->name }} published a <a href="{{ $activity->subject->path() }}">{{ $activity->subject->title }}</a>        
         </div>
         
     @endslot

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Activity;
 
 class ProfilesTest extends TestCase
 {
@@ -21,9 +22,13 @@ class ProfilesTest extends TestCase
     /** @test */
     public function profiles_display_all_threads_created_by_the_associated_user()
     {
-        $user = create('App\User');
+        $this->signIn();
+
+        $user = auth()->user();
+        // $user = create('App\User');
 
         $thread = create('App\Thread', ['user_id' => $user->id]);
+
 
         $this->get("profiles/{$user->name}")
             ->assertSee($thread->title)

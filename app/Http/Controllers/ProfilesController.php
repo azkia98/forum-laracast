@@ -19,7 +19,7 @@ class ProfilesController extends Controller
         ]);
     }
 
-    protected function getActivities(User $user) :Collection
+    protected function getActivities(User $user) 
     {
         return $user->activities()->latest()->with('subject')->get()->groupBy(function($item,$key){
             return $item->created_at->format('Y-m-d');
