@@ -6,16 +6,19 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between  align-items-center">
+                    
                     <div>
                         <a href="{{ route('profiles', $thread->creator) }}">{{ $thread->creator->name }}</a> posted at: {{ $thread->created_at->diffForHumans() }}
                     </div>
                     <div>
-                        <form class="form-inline" method="post" action="{{ $thread->path() }}">
-                            @csrf
-                            @method('DELETE')
+                        @can('update', $thread)
+                            <form class="form-inline" method="post" action="{{ $thread->path() }}">
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit" class="btn btn-link">Delete</button>
-                        </form>
+                                <button type="submit" class="btn btn-link">Delete</button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
 
