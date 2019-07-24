@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
+use App\Traits\RecordsActivity;
 
 class Thread extends Model
 {
+    use RecordsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -28,6 +31,7 @@ class Thread extends Model
         static::deleting(function ($thread) {
             $thread->replies()->delete();
         });
+
     }
 
 
@@ -62,7 +66,6 @@ class Thread extends Model
     {
         return $filters->apply($query);
     }
-
 
     // public function getReplyCountAttribute()
     // {

@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Favoritable;
+use App\Traits\RecordsActivity;
 
 class Reply extends Model
 {
 
-    use Favoritable;
+    use Favoritable,RecordsActivity;
 
 
     /**
