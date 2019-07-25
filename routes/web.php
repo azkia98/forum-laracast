@@ -31,6 +31,7 @@ Route::middleware('auth')->post('/replies/{reply}/favorites','FavoritesControlle
 Route::get('/profiles/{user}','ProfilesController@show')->name('profiles');
 
 
+Route::delete('/replies/{reply}','RepliesController@destroy');
 
 
 
