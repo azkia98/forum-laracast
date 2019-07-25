@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\RecordsActivity;
 
 /**
  * App\Favorite
@@ -31,7 +32,12 @@ class Favorite extends Model
      */
     protected $guarded = [];
 
+    use RecordsActivity;
 
+
+    public function favorited(){
+       return $this->morphTo(); 
+    }
 
 
     
