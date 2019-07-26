@@ -18,6 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        [v-cloak] {
+            display: none;
+        }  
+    </style>
 </head>
 <body style="padding-bottom: 100px;">
     <div id="app">
