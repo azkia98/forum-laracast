@@ -6,6 +6,7 @@ use App\Favorite;
 
 /**
  * Favoritable Trait for those models want to have favorites ability
+ * @method bool unFavorite()
  */
 trait Favoritable
 {
@@ -23,7 +24,21 @@ trait Favoritable
 
         $this->favorites()->create($attribute);
     }
-    
+
+
+    public function unFavorite(): bool
+    {
+        $attribute = ['user_id' => auth()->id()];
+
+
+        return $this->favorites()->where($attribute)->delete();
+    }
+
+    public function getIsFavoritedAttribute()
+    {
+        return $this->isFavorited();
+    }
+
     public function isFavorited(): bool
     {
         return !!$this->favorites->where('user_id', auth()->id())->count();

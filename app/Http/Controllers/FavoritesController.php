@@ -14,4 +14,12 @@ class FavoritesController extends Controller
 
         return redirect()->back();
     }
+
+
+    public function destroy(Reply $reply)
+    {
+       $reply->unFavorite();
+
+       return ['status' => 'ok'];
+    }
 }

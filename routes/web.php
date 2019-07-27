@@ -26,7 +26,9 @@ Route::delete('/threads/{channel}/{thread}','ThreadsController@destroy');
 Route::post('/threads','ThreadsController@store');
 
 Route::post('threads/{channel}/{thread}/replies','RepliesController@store');
+
 Route::middleware('auth')->post('/replies/{reply}/favorites','FavoritesController@store');
+Route::middleware('auth')->delete('/replies/{reply}/favorites','FavoritesController@destroy');
 
 Route::get('/profiles/{user}','ProfilesController@show')->name('profiles');
 
