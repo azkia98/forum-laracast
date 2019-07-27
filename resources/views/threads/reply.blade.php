@@ -7,7 +7,9 @@
                 <span>{{ $reply->created_at->diffForHumans() }}</span>
             </div>
             <div>
-                <favorite :reply="{{ $reply }}"></favorite>
+                @auth
+                    <favorite :reply="{{ $reply }}"></favorite>
+                @endauth
                 {{--  <form method="POST" action="{{ url("/replies/{$reply->id}/favorites") }}">
                     @csrf()
                     <button  type="submit" class="btn btn-outline-secondary btn-sm" {{ $reply->isFavorited() ? 'disabled' : '' }}>
