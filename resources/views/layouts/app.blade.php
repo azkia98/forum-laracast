@@ -9,6 +9,13 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <script>
+        window.App = {!! json_encode([
+            'signedIn' => auth()->check(),
+            'user' => auth()->user()
+        ]) !!}
+    </script>
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -34,3 +41,4 @@
     </div>
 </body>
 </html>
+
