@@ -3,16 +3,20 @@
    <div v-for="reply of items">
       <reply :data="reply" @deleted="remove"></reply> 
    </div> 
+
+   <new-reply @created="add" endpoint="/threads/nihil/1/replies"></new-reply>
 </div>
 </template>
 
 
 <script>
 import Reply from "./Reply";
+import NewReply from "./NewReply";
 export default {
     props: ['data'],
     components :{
-        Reply
+        Reply,
+        NewReply
     },
     data(){
         return {
@@ -23,6 +27,11 @@ export default {
         this.items  = this.data;
     },
     methods:{
+        add(reply){
+            this.items.push(reply);
+
+            this.$emit('added');
+        },
         remove(reply_id){
             this.$emit('removed');
             
