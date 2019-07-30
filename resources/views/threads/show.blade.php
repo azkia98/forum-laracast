@@ -34,14 +34,8 @@
                     </div>
                 </div>
 
-                <replies :data="{{ $thread->replies }}" @removed="repliesCount--" @added="repliesCount++"></replies> 
+                <replies  @removed="repliesCount--" @added="repliesCount++"></replies> 
 
-                {{--  @foreach ($replies as $reply)
-                    @include('threads.reply')
-                @endforeach  --}}
-                {{ $replies->links() }}
-                @auth
-                @endauth
             </div>
 
             <div class="col-md-4">
