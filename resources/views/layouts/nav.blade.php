@@ -19,6 +19,7 @@
                                 
                                 <a class="dropdown-item " href="{{ url('threads') }}">All Threads</a>
                                 <a class="dropdown-item " href="{{ url('threads?popular=1') }}">Popular Threads</a>
+                                <a class="dropdown-item " href="{{ url('threads?unanswered=1') }}">Unanswered Threads</a>
                                 @auth
                                     <a class="dropdown-item " href="{{ url('/threads/'. '?by='. auth()->user()->name) }}">My Threads</a>
                                 @endauth

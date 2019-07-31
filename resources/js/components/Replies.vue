@@ -44,9 +44,9 @@ export default {
         },
 
         url(page){
-
+            
             if(!page){
-               let query = location.search.match(/page=(\d+)/);
+                let query = location.search.match(/page=(\d+)/);
 
                page  = query ? query[1] : 1;
             }
@@ -54,10 +54,12 @@ export default {
         },
 
         refresh({data}){
+            window.scrollTo(0,0);
 
             this.dataSet = data;
 
             this.items = data.data; 
+
         },
 
     }

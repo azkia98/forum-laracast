@@ -2052,7 +2052,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     dataSet: function dataSet() {
-      console.log(this.dataSet.next_page_url);
       this.page = this.dataSet.current_page;
       this.prevUrl = this.dataSet.prev_page_url;
       this.nextUrl = this.dataSet.next_page_url;
@@ -2142,6 +2141,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     refresh: function refresh(_ref) {
       var data = _ref.data;
+      window.scrollTo(0, 0);
       this.dataSet = data;
       this.items = data.data;
     }

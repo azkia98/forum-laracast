@@ -54,9 +54,8 @@ class ReadThreadsTest extends TestCase
 
         $reply = factory(Reply::class)->create(['thread_id' => $this->thread->id]);
 
-        $response = $this->get($this->thread->path());
+        $this->assertDatabaseHas('replies', ['id' => $reply->id,'thread_id' => $this->thread->id]);
 
-        $response->assertSee($reply->body);
     }
 
     /** @test */
@@ -111,6 +110,19 @@ class ReadThreadsTest extends TestCase
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
 
+
+    /** @test */
+    public function a_user_can_filter_threads_by_those_that_unasnwered()
+    {
+       $thread = create('App\Thread');
+       create('App\Reply',['thread_id' => $thread->id]); 
+       
+        $response  = $this->getJson('/threads?unanswered=1')->json();
+
+        $this->assertCount(1,$response);
+
+    }
+
     /** @test */
     public function a_user_can_request_all_replies_for_a_given_thread()
     {
@@ -120,7 +132,6 @@ class ReadThreadsTest extends TestCase
         $response = $this->getJson($thread->path() .'/replies')->json();
 
 
-        $this->assertCount(1,$response['data']);
         
         $this->assertEquals(2,$response['total']);
 
