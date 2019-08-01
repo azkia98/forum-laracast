@@ -27,6 +27,7 @@ Route::post('/threads','ThreadsController@store');
 
 #subscribe
 Route::post('/threads/{channel}/{thread}/subscriptions','ThreadSubscriptionsController@store')->middleware('auth');
+Route::delete('/threads/{channel}/{thread}/subscriptions','ThreadSubscriptionsController@destroy')->middleware('auth');
 
 
 #replies

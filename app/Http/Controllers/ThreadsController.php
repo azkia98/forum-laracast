@@ -85,7 +85,6 @@ class ThreadsController extends Controller
     public function show($channel, Thread $thread)
     {
 
-        // auth()->loginUsingId(1,true);
 
         return view('threads.show', [
             'thread' => $thread,
