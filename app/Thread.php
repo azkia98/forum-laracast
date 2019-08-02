@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use App\Traits\RecordsActivity;
+use App\Notifications\ThreadWasUpdated;
 
 /**
  * App\Thread
@@ -83,7 +84,13 @@ class Thread extends Model
 
     public function addReply($reply)
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($reply);
+
+        $this->subscriptions->filter(function ($sub) use ($reply){
+            return $sub->user_id != $reply->user_id;
+        })->each->notify($reply);
+
+        return $reply;
     }
 
     public function channel()
@@ -102,6 +109,8 @@ class Thread extends Model
         $this->subscriptions()->create([
             'user_id' => $userId ?: auth()->id(),
         ]);
+
+        return $this;
     }
 
     public function subscriptions()
@@ -113,13 +122,13 @@ class Thread extends Model
     public function unsubscribe($userId = null)
     {
         $this->subscriptions()
-        ->where('user_id', $userId ?: auth()->id())
-        ->delete();
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
     }
 
 
     public function getIsSubscribedToAttribute()
     {
-        return $this->subscriptions()->where('user_id',auth()->id())->exists();
+        return $this->subscriptions()->where('user_id', auth()->id())->exists();
     }
 }
