@@ -2,15 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Thread;
-use Illuminate\Database\Eloquent\Collection;
-use App\User;
-use Notification;
 use App\Notifications\ThreadWasUpdated;
+use App\Thread;
+use App\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Notification;
+use Tests\TestCase;
+use Carbon\Carbon;
 
 class ThreadTest extends TestCase
 {
@@ -126,5 +125,22 @@ class ThreadTest extends TestCase
             ]);
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
+    }
+
+
+    /** @test */
+    public function a_thread_can_check_if_the_authenticated_user_has_read_all_replies()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+
+        $this->assertTrue($thread->hasUpdatesFor(auth()->user()));
+
+        auth()->user()->read($thread);
+
+        // Simulate that the user visited the thread
+
+        $this->assertFalse($thread->hasUpdatesFor(auth()->user()));
     }
 }

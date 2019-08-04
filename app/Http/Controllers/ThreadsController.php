@@ -8,6 +8,7 @@ use App\Channel;
 use App\User;
 use App\Filters\ThreadFilters;
 use Illuminate\Http\Response;
+use Carbon\Carbon;
 
 class ThreadsController extends Controller
 {
@@ -73,7 +74,7 @@ class ThreadsController extends Controller
         ]);
 
 
-        return redirect($thread->path())->with('flash','Your thread has been published!');
+        return redirect($thread->path())->with('flash', 'Your thread has been published!');
     }
 
     /**
@@ -85,6 +86,8 @@ class ThreadsController extends Controller
     public function show($channel, Thread $thread)
     {
 
+        if (auth()->check())
+            auth()->user()->read($thread);
 
         return view('threads.show', [
             'thread' => $thread,
@@ -123,14 +126,14 @@ class ThreadsController extends Controller
     public function destroy($channel, Thread $thread)
     {
 
-        $this->authorize('update',$thread);
+        $this->authorize('update', $thread);
 
 
         $thread->delete();
 
         if (request()->wantsJson())
             return response([], 204);
-        
+
 
         return redirect('/threads');
     }

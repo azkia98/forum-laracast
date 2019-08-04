@@ -10,7 +10,13 @@
                     <div class="d-flex justify-content-between">
                         <h4>
                             <a href="{{ $thread->path() }}">
-                                {{ $thread->title }}
+                                @if ($thread->hasUpdatesFor(auth()->user()))
+                                   <strong>
+                                       {{ $thread->title }}
+                                   </strong> 
+                                @else
+                                    {{ $thread->title }}
+                                @endif
                             </a>
                         </h4>
                         <strong>
