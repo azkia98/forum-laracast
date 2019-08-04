@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Thread;
 use Illuminate\Database\Eloquent\Collection;
 use App\User;
+use Notification;
+use App\Notifications\ThreadWasUpdated;
 
 class ThreadTest extends TestCase
 {
@@ -83,7 +85,7 @@ class ThreadTest extends TestCase
     /** @test */
     public function a_thread_can_be_unsubscribed_from()
     {
-        
+
         $thread = create('App\Thread');
 
 
@@ -91,14 +93,13 @@ class ThreadTest extends TestCase
 
         $thread->unsubscribe($userId);
 
-        $this->assertCount(0,$thread->subscriptions);
-
+        $this->assertCount(0, $thread->subscriptions);
     }
 
     /** @test */
     public function it_knows_if_the_authenticated_use_is_subscribed_to_it()
     {
-        
+
         $thread = create('App\Thread');
 
         $this->signIn();
@@ -108,6 +109,22 @@ class ThreadTest extends TestCase
 
 
         $this->assertTrue($thread->isSubscribedTo);
+    }
 
+    /** @test */
+    public function a_thread_notifies_all_registered_subscribers_when_a_reply_is_added()
+    {
+
+        Notification::fake();
+
+        $this->signIn()
+            ->thread
+            ->subscribe()
+            ->addReply([
+                'body' => 'Foobar',
+                'user_id' => 999
+            ]);
+
+        Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
 }
