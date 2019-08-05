@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Channel;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+
+    }
+    
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
         View::composer('*', function ($view) {
 
             $channels = Cache::rememberForever('channels', function () {
@@ -25,15 +37,6 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('channels', $channels);
         });
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
+        Validator::extend('spamfree','App\Rules\SpamFree@passes');
     }
 }

@@ -61,12 +61,11 @@ class ThreadsController extends Controller
     {
 
         $request->validate([
-            'title' => 'required',
-            'body' => 'required',
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
             'channel_id' => 'required|exists:channels,id',
         ]);
 
-        resolve(Spam::class)->detect($request->body);
 
 
         $thread = Thread::create([

@@ -36,10 +36,10 @@ class ParticipateInForumTest extends TestCase
         $this->post("/threads/{$thread->channel->slug}/{$thread->id}/replies", $reply->toArray());
 
 
-        $this->assertDatabaseHas('replies',['body' => $reply->body]);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
 
 
-        $this->assertEquals(1,$thread->fresh()->replies_count);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
 
@@ -52,7 +52,7 @@ class ParticipateInForumTest extends TestCase
 
         $reply = make('App\Reply', ['body' => null]);
         $this->post("/threads/{$thread->channel->slug}/{$thread->id}/replies", $reply->toArray())
-            ->assertSessionHasErrors('body');
+            ->assertStatus(422);
     }
 
     /** @test */
@@ -75,26 +75,26 @@ class ParticipateInForumTest extends TestCase
     {
         $this->signIn();
 
-        $reply = create('App\Reply',['user_id' => auth()->id()]);
-        
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+
         $this->delete("/replies/{$reply->id}")->assertStatus(302);
 
 
-        $this->assertDatabaseMissing('replies',['id' => $reply->id]);
-        $this->assertEquals(0,$reply->thread->fresh()->replies_count);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */
     public function authorized_users_can_update_replies()
     {
         $this->signIn();
-        $reply = create('App\Reply',['user_id' => auth()->id()]);
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
 
         $text = 'You been changed, fool.';
 
-        $this->patch("/replies/{$reply->id}",['body' => $text]);
+        $this->patch("/replies/{$reply->id}", ['body' => $text]);
 
-        $this->assertDatabaseHas('replies', ['body' => $text,'id' => $reply->id]);
+        $this->assertDatabaseHas('replies', ['body' => $text, 'id' => $reply->id]);
     }
 
     /** @test */
@@ -115,7 +115,7 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function replies_that_contain_spam_may_not_be_created()
     {
-        
+
         $this->signIn();
 
         $thread = factory('App\Thread')->create();
@@ -124,8 +124,12 @@ class ParticipateInForumTest extends TestCase
             'body' => 'Yahoo Customer Support'
         ]);
 
-        $this->expectException(\Exception::class);
 
-        $this->post("/threads/{$thread->channel->slug}/{$thread->id}/replies", $reply->toArray());
+        $this->post(
+            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            $reply->toArray()
+        )->assertStatus(422);
+
+
     }
 }
