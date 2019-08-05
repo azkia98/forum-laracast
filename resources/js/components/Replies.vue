@@ -1,6 +1,6 @@
 <template>
 <div>
-   <div v-for="reply of items">
+   <div v-for="reply of items" :key="reply.id">
       <reply :data="reply" @deleted="remove"></reply> 
    </div> 
 

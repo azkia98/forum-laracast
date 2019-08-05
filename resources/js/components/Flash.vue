@@ -1,5 +1,5 @@
 <template>
-    <div class="alert alert-primary alert-fix m-0" role="alert" v-show="show">
+    <div class="alert alert-fix  m-0" :class="`alert-${level}`" role="alert" v-show="show">
         <strong>Success!</strong> {{ body }}
     </div>
 </template>
@@ -10,7 +10,8 @@
         data(){
             return {
                 body : this.message,
-                show : false
+                show : false,
+                level : 'success'
             }
         },
         created(){
@@ -19,16 +20,17 @@
                 this.hide();
             }
 
-            window.events.$on('flash',message =>{
-                this.flash(message);
+            window.events.$on('flash',data =>{
+                this.flash(data);
                 this.hide();
             });
 
 
         },
         methods : {
-            flash(message){
+            flash({ message , level}){
                 this.body = message; 
+                this.level = level;
                this.show = true; 
             },
             hide(){

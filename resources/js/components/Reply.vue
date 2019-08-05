@@ -55,18 +55,22 @@ export default {
         update(){
             axios.patch(`/replies/${this.data.id}`,{
                 body: this.body
-            }).then(res => flash('Your repyly has been updated'));
+            })
+            .then(res => {
+                flash('Your reply has been updated');
+                this.editing = false;
+            })
+            .catch(err => flash(err.response.data,'danger'));
 
-            this.editing = false;
         },
         destroy(){
             axios.delete('/replies/'+ this.data.id);
             this.$emit('deleted',this.data.id);
         }
     },
-    updated(){
-        this.body = this.data.body;
-    },
+    // updated(){
+    //     this.body = this.data.body;
+    // },
     computed:{
         signedIn(){
             return window.App.signedIn;

@@ -51,8 +51,12 @@ class RepliesController extends Controller
 
         // $spam->detect(request('body'));
 
+        try {
+            $this->validateReply(request('body'));
+        } catch (\Exception $e) {
+            return response('Sorry, your reply could not be saved at this time.', 422);
+        }
 
-        $this->validateReply(request('body'));
 
 
         $reply = $thread->addReply([
@@ -100,10 +104,14 @@ class RepliesController extends Controller
     public function update(Request $request, Reply $reply)
     {
 
-        
+
         $this->authorize('update', $reply);
-        
-        $this->validateReply(request('body'));
+
+        try {
+            $this->validateReply(request('body'));
+        } catch (\Exception $e) {
+            return response('Sorry, your reply could not be saved at this time.', 422);
+        }
 
         $reply->update($request->only('body'));
     }

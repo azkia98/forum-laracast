@@ -29,11 +29,15 @@ export default {
   },
   methods: {
     addReply() {
-      axios.post(`${location.pathname}/replies`, { body: this.body }).then(response => {
+      axios.post(`${location.pathname}/replies`, { body: this.body })
+      .then(response => {
         this.body = "";
         flash("Your reply has been posted.");
 
         this.$emit("created", response.data);
+      })
+      .catch(err => {
+        flash(err.response.data,'danger');
       });
     }
   },

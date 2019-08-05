@@ -1925,7 +1925,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       body: this.message,
-      show: false
+      show: false,
+      level: 'success'
     };
   },
   created: function created() {
@@ -1936,15 +1937,18 @@ __webpack_require__.r(__webpack_exports__);
       this.hide();
     }
 
-    window.events.$on('flash', function (message) {
-      _this.flash(message);
+    window.events.$on('flash', function (data) {
+      _this.flash(data);
 
       _this.hide();
     });
   },
   methods: {
-    flash: function flash(message) {
+    flash: function flash(_ref) {
+      var message = _ref.message,
+          level = _ref.level;
       this.body = message;
+      this.level = level;
       this.show = true;
     },
     hide: function hide() {
@@ -2007,6 +2011,8 @@ __webpack_require__.r(__webpack_exports__);
         flash("Your reply has been posted.");
 
         _this.$emit("created", response.data);
+      })["catch"](function (err) {
+        flash(err.response.data, 'danger');
       });
     }
   },
@@ -2215,30 +2221,34 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     update: function update() {
+      var _this = this;
+
       axios.patch("/replies/".concat(this.data.id), {
         body: this.body
       }).then(function (res) {
-        return flash('Your repyly has been updated');
+        flash('Your reply has been updated');
+        _this.editing = false;
+      })["catch"](function (err) {
+        return flash(err.response.data, 'danger');
       });
-      this.editing = false;
     },
     destroy: function destroy() {
       axios["delete"]('/replies/' + this.data.id);
       this.$emit('deleted', this.data.id);
     }
   },
-  updated: function updated() {
-    this.body = this.data.body;
-  },
+  // updated(){
+  //     this.body = this.data.body;
+  // },
   computed: {
     signedIn: function signedIn() {
       return window.App.signedIn;
     },
     canUpdate: function canUpdate() {
-      var _this = this;
+      var _this2 = this;
 
       return this.authorize(function (user) {
-        return _this.data.user_id == user.id;
+        return _this2.data.user_id == user.id;
       });
     },
     ago: function ago() {
@@ -55935,7 +55945,8 @@ var render = function() {
       directives: [
         { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
       ],
-      staticClass: "alert alert-primary alert-fix m-0",
+      staticClass: "alert alert-fix  m-0",
+      class: "alert-" + _vm.level,
       attrs: { role: "alert" }
     },
     [_c("strong", [_vm._v("Success!")]), _vm._v(" " + _vm._s(_vm.body) + "\n")]
@@ -56128,6 +56139,7 @@ var render = function() {
       _vm._l(_vm.items, function(reply) {
         return _c(
           "div",
+          { key: reply.id },
           [
             _c("reply", { attrs: { data: reply }, on: { deleted: _vm.remove } })
           ],
@@ -68576,7 +68588,11 @@ Vue.component('thread-view', __webpack_require__(/*! ./pages/Thread.vue */ "./re
 window.events = new Vue();
 
 window.flash = function (message) {
-  window.events.$emit('flash', message);
+  var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  window.events.$emit('flash', {
+    message: message,
+    level: level
+  });
 };
 
 var app = new Vue({
