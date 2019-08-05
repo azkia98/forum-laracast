@@ -6,6 +6,7 @@ use App\Reply;
 use Illuminate\Http\Request;
 use App\Thread;
 use App\Channel;
+use App\Inspection\Spam;
 
 class RepliesController extends Controller
 {
@@ -24,7 +25,7 @@ class RepliesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($channelId,Thread $thread)
+    public function index($channelId, Thread $thread)
     {
         return $thread->replies()->paginate(20);
     }
@@ -45,12 +46,16 @@ class RepliesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($channel,Thread $thread)
+    public function store($channel, Thread $thread, Spam $spam)
     {
 
-        $this->validate(request(),[
+        $this->validate(request(), [
             'body' => 'required'
         ]);
+
+        $spam->detect(request('body'));
+
+
 
         $reply = $thread->addReply([
             'body' => request('body'),
@@ -58,8 +63,7 @@ class RepliesController extends Controller
         ]);
 
 
-        if(request()->expectsJson() )
-        {
+        if (request()->expectsJson()) {
             return $reply->load('owner');
         }
 
@@ -98,11 +102,10 @@ class RepliesController extends Controller
     public function update(Request $request, Reply $reply)
     {
 
-        $this->authorize('update',$reply);
+        $this->authorize('update', $reply);
 
 
         $reply->update($request->only('body'));
-
     }
 
     /**
@@ -113,11 +116,11 @@ class RepliesController extends Controller
      */
     public function destroy(Reply $reply)
     {
-        $this->authorize('update',$reply);
+        $this->authorize('update', $reply);
 
         $reply->delete();
 
-        if(request()->expectsJson()){
+        if (request()->expectsJson()) {
             return response(['status' => 'Reply deleted!']);
         }
 
