@@ -6,6 +6,7 @@ use App\Reply;
 use Illuminate\Http\Request;
 use App\Thread;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\CreatePostRequest;
 
 class RepliesController extends Controller
 {
@@ -45,32 +46,22 @@ class RepliesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($channel, Thread $thread)
+    public function store($channel, Thread $thread, CreatePostRequest $form)
     {
 
 
-        if (Gate::denies('create', new Reply())) {
-            return response('You are posting to frequently. Please take a break. :)', 422);
-        }
+        // if (Gate::denies('create', new Reply())) {
+        //     return response('You are posting to frequently. Please take a break. :)', 422);
+        // }
 
-
-        try {
-            $this->validate(request(), ['body' => 'required|spamfree']);
-
-            $reply = $thread->addReply([
-                'body' => request('body'),
-                'user_id' => auth()->id()
-            ]);
-        } catch (\Exception $e) {
-            return response('Sorry, your reply could not be saved at this time.', 422);
-        }
-
+        $reply = $thread->addReply([
+            'body' => request('body'),
+            'user_id' => auth()->id()
+        ]);
 
         $reply->load('owner');
 
-        return response($reply,200);
-
-
+        return response($reply, 200);
     }
 
     /**
