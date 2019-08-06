@@ -129,7 +129,29 @@ class ParticipateInForumTest extends TestCase
             "/threads/{$thread->channel->slug}/{$thread->id}/replies",
             $reply->toArray()
         )->assertStatus(422);
+    }
 
 
+    /** @test */
+    public function users_may_only_reply_a_maximum_of_once_per_minute()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+
+        $reply = factory('App\Reply')->make([
+            'body' => 'My simple reply'
+        ]);
+
+        $this->post(
+            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            $reply->toArray()
+        )->assertStatus(200);
+
+
+        $this->post(
+            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            $reply->toArray()
+        )->assertStatus(422);
     }
 }
