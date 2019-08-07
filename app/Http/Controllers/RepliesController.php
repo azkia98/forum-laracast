@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Thread;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\CreatePostRequest;
+use App\User;
+use App\Notifications\YouWereMentioned;
 
 class RepliesController extends Controller
 {
@@ -58,6 +60,20 @@ class RepliesController extends Controller
             'body' => request('body'),
             'user_id' => auth()->id()
         ]);
+
+        preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
+
+        $names = $matches[1];
+
+        foreach ($names as $name) {
+            $user = User::where('name',$name)->first();
+
+            if ($user) {
+                $user->notify(new YouWereMentioned($reply));
+            }
+        }
+
+
 
         $reply->load('owner');
 
