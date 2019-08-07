@@ -51,29 +51,10 @@ class RepliesController extends Controller
     public function store($channel, Thread $thread, CreatePostRequest $form)
     {
 
-
-        // if (Gate::denies('create', new Reply())) {
-        //     return response('You are posting to frequently. Please take a break. :)', 422);
-        // }
-
         $reply = $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
         ]);
-
-        preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
-
-        $names = $matches[1];
-
-        foreach ($names as $name) {
-            $user = User::where('name',$name)->first();
-
-            if ($user) {
-                $user->notify(new YouWereMentioned($reply));
-            }
-        }
-
-
 
         $reply->load('owner');
 

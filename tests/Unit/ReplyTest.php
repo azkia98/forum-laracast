@@ -34,4 +34,15 @@ class ReplyTest extends TestCase
 
         $this->assertFalse($reply->wasJustPublished());
     }
+
+    /** @test */
+    public function it_can_detect_all_mentioned_users_in_the_body()
+    {
+        $reply = create('App\Reply',[
+            'body' => '@Ali wants to talk to @Mahdi'
+        ]);
+
+
+        $this->assertEquals(['Ali','Mahdi'],$reply->mentionedUsers());
+    }
 }

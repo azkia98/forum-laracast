@@ -7,6 +7,7 @@ use ReflectionClass;
 use App\Traits\RecordsActivity;
 use App\Notifications\ThreadWasUpdated;
 use App\Events\ThreadHasNewReply;
+use App\Events\ThreadReceivedNewReply;
 
 /**
  * App\Thread
@@ -87,7 +88,9 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        $this->notifySubscribers($reply);
+        // $this->notifySubscribers($reply);
+
+        event(new ThreadReceivedNewReply($reply));
 
 
         return $reply;
