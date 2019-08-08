@@ -21,7 +21,7 @@
                 <button class="btn btn-sm btn-link" @click="editing = false">Cancel</button>
             </div>
             <div v-else>
-                <div class="body" v-text="body"></div>
+                <div class="body" v-html ="body"></div>
             </div>
         </div>
         <div class="card-footer d-flex" v-if="canUpdate">
