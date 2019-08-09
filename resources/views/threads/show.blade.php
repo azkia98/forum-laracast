@@ -13,8 +13,14 @@
                 <div class="card mb-1">
                     <div class="card-header d-flex justify-content-between  align-items-center">
                         
-                        <div>
-                            <a href="{{ route('profiles', $thread->creator) }}">{{ $thread->creator->name }}</a> posted at: {{ $thread->created_at->diffForHumans() }}
+                        <div class="d-flex align-items-center">
+                            <div class="mr-2">
+                                <img src="{{ asset($thread->creator->avatar()) }}" alt="" width="25" height="25">
+                            </div>
+                            <div>
+                                <a href="{{ route('profiles', $thread->creator) }}">{{ $thread->creator->name }}</a> 
+                                posted at: {{ $thread->created_at->diffForHumans() }}
+                            </div>
                         </div>
                         <div>
                             @can('update', $thread)

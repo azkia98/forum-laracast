@@ -9,6 +9,28 @@
         {{--  <hr class="my-4">  --}}
     </div>
 
+    @can('update', $profileUser)
+        <div class="card mb-4">
+            <div class="card-header">
+                Avatar
+            </div>
+            <div class="card-body d-flex justify-content-between">
+                <form action="{{ route('avatar',$profileUser) }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <input class="" type="file" name="avatar">
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-secondary">Add Avatar</button>
+                </form>
+                <div class="d-flex">
+                    <img src="{{ asset($profileUser->avatar_path) }}" alt="" width="85" height="85" srcset="">
+                </div>
+            </div>
+        </div>
+    @endcan
+
+
 
     @forelse ($activities as $date => $activity)
         <h4>{{ $date }}</h4> <hr>

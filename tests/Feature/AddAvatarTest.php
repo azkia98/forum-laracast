@@ -17,7 +17,7 @@ class AddAvatarTest extends TestCase
     {
         $this->withExceptionHandling();
 
-        $res = $this->json('post', '/api/users/1/avatar')
+        $res = $this->json('post', '/users/1/avatar')
             ->assertStatus(401);
     }
 
@@ -29,7 +29,7 @@ class AddAvatarTest extends TestCase
 
         $user = auth()->user();
 
-        $res = $this->json('post', "/api/users/{$user->id}/avatar", [
+        $res = $this->json('post', "/users/{$user->id}/avatar", [
             'avatar' => 'not_an_image'
         ])
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -45,7 +45,7 @@ class AddAvatarTest extends TestCase
 
         $user = auth()->user();
 
-        $res = $this->json('post', "/api/users/{$user->id}/avatar", [
+        $res = $this->json('post', "/users/{$user->id}/avatar", [
             'avatar' => $file = UploadedFile::fake()->image('avatar.jpg')
         ]);
 

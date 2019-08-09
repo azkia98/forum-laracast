@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// auth()->loginUsingId(1,true);
 Route::get('/', function () {
     return view('welcome');
 });
@@ -48,7 +48,8 @@ Route::get('/profiles/{user}/notifications','UserNotificationsController@index')
 Route::delete('/profiles/{user}/notifications/{notification}','UserNotificationsController@destroy');
 
 
-
+#users
+Route::post('users/{user}/avatar','Api\UserAvatarController@store')->middleware('auth')->name('avatar');
 
 
 

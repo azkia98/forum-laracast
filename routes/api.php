@@ -18,5 +18,3 @@ use Illuminate\Http\Request;
 // });
 
 Route::get('users','Api\UsersController@index');
-
-Route::post('users/{user}/avatar','Api\UserAvatarController@store')->middleware('auth');
