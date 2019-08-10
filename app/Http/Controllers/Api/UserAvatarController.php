@@ -20,10 +20,9 @@ class UserAvatarController extends Controller
             'avatar_path' => $file =  $request->file('avatar')->store('avatars','public')
         ]);
 
-        
+       return response([],204); 
 
 
-        return back();
         
     }
 }

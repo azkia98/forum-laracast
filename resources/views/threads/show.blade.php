@@ -15,7 +15,7 @@
                         
                         <div class="d-flex align-items-center">
                             <div class="mr-2">
-                                <img src="{{ asset($thread->creator->avatar()) }}" alt="" width="25" height="25">
+                                <img src="{{ $thread->creator->avatar }}" alt="" width="25" height="25">
                             </div>
                             <div>
                                 <a href="{{ route('profiles', $thread->creator) }}">{{ $thread->creator->name }}</a> 
