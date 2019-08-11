@@ -3,11 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
 use App\Traits\RecordsActivity;
-use App\Notifications\ThreadWasUpdated;
-use App\Events\ThreadHasNewReply;
 use App\Events\ThreadReceivedNewReply;
+use App\Traits\RecordsVisits;
 
 /**
  * App\Thread
@@ -38,7 +36,7 @@ use App\Events\ThreadReceivedNewReply;
  */
 class Thread extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, RecordsVisits;
 
     /**
      * The attributes that aren't mass assignable.
