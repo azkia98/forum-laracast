@@ -10,6 +10,8 @@ use App\Filters\ThreadFilters;
 use Illuminate\Http\Response;
 use Carbon\Carbon;
 use App\Inspection\Spam;
+use Illuminate\Support\Facades\Redis;
+use Psy\Util\Json;
 
 class ThreadsController extends Controller
 {
@@ -38,7 +40,9 @@ class ThreadsController extends Controller
             return $threads;
         }
 
-        return view('threads.index', compact('threads'));
+        $trending = array_map('json_decode',Redis::zrevrange('trending_threads',0,4));
+
+        return view('threads.index', compact('threads','trending'));
     }
 
     /**
@@ -90,6 +94,11 @@ class ThreadsController extends Controller
 
         if (auth()->check())
             auth()->user()->read($thread);
+
+        Redis::zincrby('trending_threads',1,Json::encode([
+            'title' => $thread->title,
+            'path' => $thread->path()
+        ]));
 
         return view('threads.show', [
             'thread' => $thread,
