@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\RecordsActivity;
 use App\Events\ThreadReceivedNewReply;
-use App\Traits\RecordsVisits;
 
 /**
  * App\Thread
@@ -36,7 +35,7 @@ use App\Traits\RecordsVisits;
  */
 class Thread extends Model
 {
-    use RecordsActivity, RecordsVisits;
+    use RecordsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -143,14 +142,14 @@ class Thread extends Model
 
     public function hasUpdatesFor()
     {
-
         $key = '';
-
-
-
         if (auth()->check())
             $key =  auth()->user()->visitedThreadCacheKey($this);
 
         return $this->updated_at > cache($key);
     }
+    
+
+
+
 }
