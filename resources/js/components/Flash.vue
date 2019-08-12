@@ -16,7 +16,8 @@
         },
         created(){
             if(this.message){
-                this.flash(this.message);
+                console.log('fadf')
+                this.flash();
                 this.hide();
             }
 
@@ -28,9 +29,11 @@
 
         },
         methods : {
-            flash({ message , level}){
-                this.body = message; 
-                this.level = level;
+            flash(data){
+                if(data){
+                    this.body = data.message; 
+                    this.level = data.level;
+                }
                this.show = true; 
             },
             hide(){

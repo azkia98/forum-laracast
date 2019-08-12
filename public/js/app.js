@@ -3222,7 +3222,8 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     if (this.message) {
-      this.flash(this.message);
+      console.log('fadf');
+      this.flash();
       this.hide();
     }
 
@@ -3233,11 +3234,12 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    flash: function flash(_ref) {
-      var message = _ref.message,
-          level = _ref.level;
-      this.body = message;
-      this.level = level;
+    flash: function flash(data) {
+      if (data) {
+        this.body = data.message;
+        this.level = data.level;
+      }
+
       this.show = true;
     },
     hide: function hide() {
