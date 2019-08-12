@@ -34,19 +34,23 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $avatar_path
+ * @property int $confirmed
+ * @property-read mixed $avatar
+ * @property-read \App\Reply $lastReply
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAvatarPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereConfirmed($value)
  */
 class User extends Authenticatable
 {
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'avatar_path'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -64,6 +68,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'confirmed' => 'boolean'
     ];
 
     public function getRouteKeyName()
@@ -106,5 +111,12 @@ class User extends Authenticatable
     public function getAvatarAttribute()
     {
        return asset($this->avatar_path ?: 'avatars/default.png');
+    }
+
+    public function confirm()
+    {
+        $this->confirmed = true;
+
+        $this->save();
     }
 }

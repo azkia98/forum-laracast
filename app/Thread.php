@@ -32,6 +32,12 @@ use App\Events\ThreadReceivedNewReply;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereUserId($value)
  * @mixin \Eloquent
+ * @property int $replies_count
+ * @property int|null $visits
+ * @property-read mixed $is_subscribed_to
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ThreadSubscription[] $subscriptions
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereRepliesCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereVisits($value)
  */
 class Thread extends Model
 {

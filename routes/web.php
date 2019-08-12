@@ -40,8 +40,9 @@ Route::patch('/replies/{reply}','RepliesController@update');
 Route::middleware('auth')->post('/replies/{reply}/favorites','FavoritesController@store');
 Route::middleware('auth')->delete('/replies/{reply}/favorites','FavoritesController@destroy');
 
-#profiles
+#users
 Route::get('/profiles/{user}','ProfilesController@show')->name('profiles');
+Route::get('/register/confirm','Api\RegisterConfirmationController@index');
 
 #notifications
 Route::get('/profiles/{user}/notifications','UserNotificationsController@index');
