@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Notification;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 class ThreadTest extends TestCase
 {
@@ -26,9 +25,9 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    public function a_thread_can_make_a_string_path()
+    public function a_thread_has_a_path()
     {
-        $this->assertEquals(url("/threads/{$this->thread->channel->slug}/{$this->thread->id}"), $this->thread->path());
+        $this->assertEquals(url("/threads/{$this->thread->channel->slug}/{$this->thread->slug}"), $this->thread->path());
     }
 
     /** @test */

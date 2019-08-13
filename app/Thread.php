@@ -73,7 +73,7 @@ class Thread extends Model
 
     public function path()
     {
-        return url("/threads/{$this->channel->slug}/{$this->id}");
+        return url("/threads/{$this->channel->slug}/{$this->slug}");
     }
 
     public function creator()
@@ -154,7 +154,11 @@ class Thread extends Model
 
         return $this->updated_at > cache($key);
     }
-    
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
 
 
