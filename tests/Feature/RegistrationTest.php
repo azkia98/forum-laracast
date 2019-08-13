@@ -18,15 +18,21 @@ class RegistrationTest extends TestCase
     {
         Mail::fake();
 
-        event(new Registered(create('App\User')));
+        $this->post('/register', [
+            'name' => 'mahdi',
+            'email' => 'mahdi@email.com',
+            'password' => 'foobar1234',
+            'password_confirmation' => 'foobar1234'
+        ]);
 
 
-        Mail::assertSent(PleaseConfirmYourEmail::class);
+        Mail::assertQueued(PleaseConfirmYourEmail::class);
     }
 
     /** @test */
     public function user_can_fully_confirm_their_email_addresses()
     {
+        Mail::fake();
         $this->post('/register', [
             'name' => 'mahdi',
             'email' => 'mahdi@email.com',
@@ -45,6 +51,14 @@ class RegistrationTest extends TestCase
 
         $this->assertTrue($user->fresh()->confirmed);
 
-        $response->assertRedirect('/threads');
+        $response->assertRedirect(route('threads'));
+    }
+
+    /** @test */
+    public function confirming_an_invalid_token()
+    {
+        $this->get(route('register.confirm', ['token' => 'invalidtoken']))
+            ->assertRedirect(route('threads'))
+            ->assertSessionHas('flash', 'Unknown token.');
     }
 }

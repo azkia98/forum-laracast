@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 
 #threads
-Route::get('/threads','ThreadsController@index');
+Route::get('/threads','ThreadsController@index')->name('threads');
 Route::get('/threads/create','ThreadsController@create');
 Route::get('/threads/{channel}','ThreadsController@index');
 Route::get('/threads/{channel}/{thread}','ThreadsController@show');
@@ -42,7 +42,7 @@ Route::middleware('auth')->delete('/replies/{reply}/favorites','FavoritesControl
 
 #users
 Route::get('/profiles/{user}','ProfilesController@show')->name('profiles');
-Route::get('/register/confirm','Api\RegisterConfirmationController@index');
+Route::get('/register/confirm','Api\RegisterConfirmationController@index')->name('register.confirm');
 
 #notifications
 Route::get('/profiles/{user}/notifications','UserNotificationsController@index');
