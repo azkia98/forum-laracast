@@ -40,6 +40,8 @@ use Carbon\Carbon;
  * @property-read \App\Reply $lastReply
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAvatarPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereConfirmed($value)
+ * @property string|null $confirmation_token
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereConfirmationToken($value)
  */
 class User extends Authenticatable
 {
@@ -116,6 +118,7 @@ class User extends Authenticatable
     public function confirm()
     {
         $this->confirmed = true;
+        $this->confirmation_token = null;
 
         $this->save();
     }
