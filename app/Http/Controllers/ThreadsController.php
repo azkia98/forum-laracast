@@ -74,7 +74,7 @@ class ThreadsController extends Controller
             'title' => $request->title,
             'channel_id' => $request->channel_id,
             'user_id' => auth()->id(),
-            'slug' => str_slug($request->title)
+            'slug' => $request->title
         ]);
 
 

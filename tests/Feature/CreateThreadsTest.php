@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\Response;
@@ -41,16 +42,14 @@ class CreateThreadsTest extends TestCase
     public function authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
     {
 
-        $user = create('App\User',['confirmed' => false]);
+        $user = create('App\User', ['confirmed' => false]);
 
         $this->signIn($user);
 
 
-        $this->post('/threads',make('App\Thread')->toArray())
+        $this->post('/threads', make('App\Thread')->toArray())
             ->assertRedirect('/threads')
             ->assertSessionHas('flash', 'You must first confirm your email address.');
-
-        
     }
 
 
@@ -121,7 +120,7 @@ class CreateThreadsTest extends TestCase
 
 
     /** @test */
-    public function an_athorized_user_can_delete_thread()
+    public function an_authorized_user_can_delete_thread()
     {
         $this->signIn();
         $thread = create('App\Thread', ['user_id' => auth()->id()]);
@@ -144,5 +143,26 @@ class CreateThreadsTest extends TestCase
             'subject_id' => $reply->id,
             'subject_type' => get_class($reply)
         ]);
+    }
+
+    /** @test */
+    public function a_thread_requires_a_unique_slug()
+    {
+        $this->signIn();
+
+        $string = 'foo-title';
+        
+        $thread = create('App\Thread', ['title' => 'Foo Title', 'slug' => $string]);
+
+        $this->assertEquals($thread->fresh()->slug, "$string");
+        
+        $this->post(route('threads'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug("$string-2")->exists()); //err
+
+        $this->post(route('threads'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug("$string-3")->exists());
+         
     }
 }
