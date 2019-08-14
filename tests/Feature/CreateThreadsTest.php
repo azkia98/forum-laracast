@@ -151,18 +151,34 @@ class CreateThreadsTest extends TestCase
         $this->signIn();
 
         $string = 'foo-title';
-        
-        $thread = create('App\Thread', ['title' => 'Foo Title', 'slug' => $string]);
 
-        $this->assertEquals($thread->fresh()->slug, "$string");
-        
-        $this->post(route('threads'), $thread->toArray());
+        create('App\Thread', [], 2);
 
-        $this->assertTrue(Thread::whereSlug("$string-2")->exists()); //err
+        $thread = create('App\Thread', ['title' => 'Foo Title']);
 
-        $this->post(route('threads'), $thread->toArray());
 
-        $this->assertTrue(Thread::whereSlug("$string-3")->exists());
-         
+        $t = $this->postJson(route('threads'), $thread->toArray())->json();
+
+
+        $this->assertEquals("$string-{$t['id']}", $t['slug']);
+
+        $t = $this->postJson(route('threads'), $thread->toArray())->json();
+
+
+        $this->assertTrue(Thread::whereSlug("$string-{$t['id']}")->exists());
+    }
+
+    /** @test */
+    public function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread', ['title' => 'Some Title 24']);
+
+        $t = $this->postJson(route('threads'), $thread->toArray())->json();
+
+
+
+        $this->assertTrue(Thread::whereSlug("some-title-24-{$t['id']}")->exists());
     }
 }

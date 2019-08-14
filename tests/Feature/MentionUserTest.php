@@ -29,7 +29,7 @@ class MentionUserTest extends TestCase
 
         $this->json(
             'post',
-            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            "/threads/{$thread->channel->slug}/{$thread->slug}/replies",
             $reply->toArray()
         );
 

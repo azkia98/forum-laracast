@@ -33,7 +33,7 @@ class ParticipateInForumTest extends TestCase
 
         $reply = factory('App\Reply')->make();
 
-        $this->post("/threads/{$thread->channel->slug}/{$thread->id}/replies", $reply->toArray());
+        $this->post("/threads/{$thread->channel->slug}/{$thread->slug}/replies", $reply->toArray());
 
 
         $this->assertDatabaseHas('replies', ['body' => $reply->body]);
@@ -51,7 +51,7 @@ class ParticipateInForumTest extends TestCase
         $thread = factory('App\Thread')->create();
 
         $reply = make('App\Reply', ['body' => null]);
-        $this->json('post',"/threads/{$thread->channel->slug}/{$thread->id}/replies", $reply->toArray())
+        $this->json('post',"/threads/{$thread->channel->slug}/{$thread->slug}/replies", $reply->toArray())
             ->assertStatus(422);
     }
 
@@ -129,7 +129,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->json(
             'post',
-            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            "/threads/{$thread->channel->slug}/{$thread->slug}/replies",
             $reply->toArray()
         )->assertStatus(422);
     }
@@ -148,14 +148,14 @@ class ParticipateInForumTest extends TestCase
         ]);
 
         $this->post(
-            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            "/threads/{$thread->channel->slug}/{$thread->slug}/replies",
             $reply->toArray()
         )->assertStatus(200);
 
 
         $this->json(
             'post',
-            "/threads/{$thread->channel->slug}/{$thread->id}/replies",
+            "/threads/{$thread->channel->slug}/{$thread->slug}/replies",
             $reply->toArray()
         )->assertStatus(422);
     }
