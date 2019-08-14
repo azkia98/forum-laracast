@@ -26,8 +26,8 @@
                     <div class="body" v-html="body"></div>
                 </div>
             </div>
-            <div class="card-footer d-flex" v-if="canUpdate">
-                <div v-show="canUpdate">
+            <div class="card-footer d-flex">
+                <div v-show="authorize('updateReply',reply)">
                     <button class="btn btn-sm btn-outline-secondary mr-1" @click="editing = true" >Edit</button>
                     <button type="submit" class="btn btn-outline-danger btn-sm" @click="destroy()" >Delete</button>
                 </div>
@@ -51,7 +51,8 @@ export default {
             editing: false,
             id: this.data.id,
             body: this.data.body,
-            isBest: false
+            isBest: false,
+            reply : this.data
         };
     },
     methods: {
@@ -78,12 +79,6 @@ export default {
     //     this.body = this.data.body;
     // },
     computed: {
-        signedIn() {
-            return window.App.signedIn;
-        },
-        canUpdate() {
-            return this.authorize(user => this.data.user_id == user.id);
-        },
         ago() {
             return moment(this.data.created_at).fromNow();
         }

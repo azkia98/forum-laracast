@@ -3360,11 +3360,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     });
-  },
-  computed: {
-    signedIn: function signedIn() {
-      return window.App.signedIn;
-    }
   }
 });
 
@@ -3565,7 +3560,8 @@ __webpack_require__.r(__webpack_exports__);
       editing: false,
       id: this.data.id,
       body: this.data.body,
-      isBest: false
+      isBest: false,
+      reply: this.data
     };
   },
   methods: {
@@ -3593,16 +3589,6 @@ __webpack_require__.r(__webpack_exports__);
   //     this.body = this.data.body;
   // },
   computed: {
-    signedIn: function signedIn() {
-      return window.App.signedIn;
-    },
-    canUpdate: function canUpdate() {
-      var _this2 = this;
-
-      return this.authorize(function (user) {
-        return _this2.data.user_id == user.id;
-      });
-    },
     ago: function ago() {
       return moment__WEBPACK_IMPORTED_MODULE_1___default()(this.data.created_at).fromNow();
     }
@@ -58143,73 +58129,71 @@ var render = function() {
             ])
       ]),
       _vm._v(" "),
-      _vm.canUpdate
-        ? _c("div", { staticClass: "card-footer d-flex" }, [
-            _c(
-              "div",
+      _c("div", { staticClass: "card-footer d-flex" }, [
+        _c(
+          "div",
+          {
+            directives: [
               {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.canUpdate,
-                    expression: "canUpdate"
+                name: "show",
+                rawName: "v-show",
+                value: _vm.authorize("updateReply", _vm.reply),
+                expression: "authorize('updateReply',reply)"
+              }
+            ]
+          },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-outline-secondary mr-1",
+                on: {
+                  click: function($event) {
+                    _vm.editing = true
                   }
-                ]
+                }
               },
-              [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-outline-secondary mr-1",
-                    on: {
-                      click: function($event) {
-                        _vm.editing = true
-                      }
-                    }
-                  },
-                  [_vm._v("Edit")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-danger btn-sm",
-                    attrs: { type: "submit" },
-                    on: {
-                      click: function($event) {
-                        return _vm.destroy()
-                      }
-                    }
-                  },
-                  [_vm._v("Delete")]
-                )
-              ]
+              [_vm._v("Edit")]
             ),
             _vm._v(" "),
             _c(
               "button",
               {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.isBest,
-                    expression: "! isBest"
-                  }
-                ],
-                staticClass: "btn btn-outline-secondary btn-sm ml-auto",
-                attrs: { type: "button" },
+                staticClass: "btn btn-outline-danger btn-sm",
+                attrs: { type: "submit" },
                 on: {
                   click: function($event) {
-                    return _vm.markAsBest()
+                    return _vm.destroy()
                   }
                 }
               },
-              [_vm._v("Best Reply?")]
+              [_vm._v("Delete")]
             )
-          ])
-        : _vm._e()
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isBest,
+                expression: "! isBest"
+              }
+            ],
+            staticClass: "btn btn-outline-secondary btn-sm ml-auto",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                return _vm.markAsBest()
+              }
+            }
+          },
+          [_vm._v("Best Reply?")]
+        )
+      ])
     ])
   ])
 }
@@ -70474,10 +70458,23 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
-window.Vue.prototype.authorize = function (handler) {
-  var user = window.App.user;
-  return user ? handler(user) : false;
+var authorizations = __webpack_require__(/*! ./authorizations */ "./resources/js/authorizations.js");
+
+window.Vue.prototype.authorize = function () {
+  if (!window.App.signedIn) return false;
+
+  for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+    params[_key] = arguments[_key];
+  }
+
+  if (typeof params[0] == 'string') {
+    return authorizations[params[0]](params[1]);
+  }
+
+  return params[0](window.App.user);
 };
+
+window.Vue.prototype.signedIn = window.App.signedIn;
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -70488,7 +70485,6 @@ window.Vue.prototype.authorize = function (handler) {
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 // Vue.component('favorite', require('./components/Favorite.vue').default);
-
 
 Vue.component('flash', __webpack_require__(/*! ./components/Flash.vue */ "./resources/js/components/Flash.vue")["default"]);
 Vue.component('paginator', __webpack_require__(/*! ./components/Paginator.vue */ "./resources/js/components/Paginator.vue")["default"]);
@@ -70514,6 +70510,23 @@ window.flash = function (message) {
 var app = new Vue({
   el: '#app'
 });
+
+/***/ }),
+
+/***/ "./resources/js/authorizations.js":
+/*!****************************************!*\
+  !*** ./resources/js/authorizations.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var user = window.App.user;
+var authorizations = {
+  updateReply: function updateReply(reply) {
+    return reply.user_id === user.id;
+  }
+};
+module.exports = authorizations;
 
 /***/ }),
 
