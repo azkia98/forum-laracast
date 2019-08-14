@@ -2,6 +2,10 @@
 
 @section('header')
     <link href="{{ asset('css/vendor/jquery.atwho.css') }}" rel="stylesheet">
+
+    <script>
+        window.thread = @json($thread); 
+    </script>
 @endsection
 
 @section('content')
