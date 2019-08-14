@@ -3550,10 +3550,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
+  props: ["data"],
   components: {
     Favorite: _Favorite__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -3561,7 +3564,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       editing: false,
       id: this.data.id,
-      body: this.data.body
+      body: this.data.body,
+      isBest: false
     };
   },
   methods: {
@@ -3571,15 +3575,18 @@ __webpack_require__.r(__webpack_exports__);
       axios.patch("/replies/".concat(this.data.id), {
         body: this.body
       }).then(function (res) {
-        flash('Your reply has been updated');
+        flash("Your reply has been updated");
         _this.editing = false;
       })["catch"](function (err) {
-        return flash(err.response.data, 'danger');
+        return flash(err.response.data, "danger");
       });
     },
     destroy: function destroy() {
-      axios["delete"]('/replies/' + this.data.id);
-      this.$emit('deleted', this.data.id);
+      axios["delete"]("/replies/" + this.data.id);
+      this.$emit("deleted", this.data.id);
+    },
+    markAsBest: function markAsBest() {
+      this.isBest = true;
     }
   },
   // updated(){
@@ -58055,7 +58062,8 @@ var render = function() {
         "div",
         {
           staticClass:
-            "card-header d-flex justify-content-between align-items-center"
+            "card-header d-flex justify-content-between align-items-center",
+          class: _vm.isBest ? "bg-success text-light" : ""
         },
         [
           _c("div", [
@@ -58064,7 +58072,7 @@ var render = function() {
               domProps: { textContent: _vm._s(_vm.data.owner.name) }
             }),
             _vm._v(" "),
-            _c("span", [_vm._v("said at ")]),
+            _c("span", [_vm._v("said at")]),
             _vm._v(" "),
             _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
           ]),
@@ -58138,30 +58146,67 @@ var render = function() {
       _vm.canUpdate
         ? _c("div", { staticClass: "card-footer d-flex" }, [
             _c(
-              "button",
+              "div",
               {
-                staticClass: "btn btn-sm btn-outline-secondary mr-1",
-                on: {
-                  click: function($event) {
-                    _vm.editing = true
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.canUpdate,
+                    expression: "canUpdate"
                   }
-                }
+                ]
               },
-              [_vm._v("Edit")]
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-outline-secondary mr-1",
+                    on: {
+                      click: function($event) {
+                        _vm.editing = true
+                      }
+                    }
+                  },
+                  [_vm._v("Edit")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-danger btn-sm",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        return _vm.destroy()
+                      }
+                    }
+                  },
+                  [_vm._v("Delete")]
+                )
+              ]
             ),
             _vm._v(" "),
             _c(
               "button",
               {
-                staticClass: "btn btn-outline-danger btn-sm",
-                attrs: { type: "submit" },
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isBest,
+                    expression: "! isBest"
+                  }
+                ],
+                staticClass: "btn btn-outline-secondary btn-sm ml-auto",
+                attrs: { type: "button" },
                 on: {
                   click: function($event) {
-                    return _vm.destroy()
+                    return _vm.markAsBest()
                   }
                 }
               },
-              [_vm._v("Delete")]
+              [_vm._v("Best Reply?")]
             )
           ])
         : _vm._e()
