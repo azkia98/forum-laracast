@@ -61,6 +61,8 @@ class Reply extends Model
 
         static::deleting(function ($reply) {
             $reply->thread->decrement('replies_count');
+
+
         });
 
     }
