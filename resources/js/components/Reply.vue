@@ -26,12 +26,12 @@
                     <div class="body" v-html="body"></div>
                 </div>
             </div>
-            <div class="card-footer d-flex">
-                <div v-show="authorize('updateReply',reply)">
+            <div class="card-footer d-flex" v-if="authorize('owns',reply) || authorize('owns',reply.thread)">
+                <div v-show="authorize('owns',reply)">
                     <button class="btn btn-sm btn-outline-secondary mr-1" @click="editing = true" >Edit</button>
                     <button type="submit" class="btn btn-outline-danger btn-sm" @click="destroy()" >Delete</button>
                 </div>
-                <button type="button" class="btn btn-outline-secondary btn-sm ml-auto" v-show="! isBest" @click="markAsBest()" >Best Reply?</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm ml-auto" v-if="authorize('owns',reply.thread)"  @click="markAsBest()" >Best Reply?</button>
             </div>
         </div>
     </div>

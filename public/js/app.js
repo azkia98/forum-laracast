@@ -58140,71 +58140,68 @@ var render = function() {
             ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card-footer d-flex" }, [
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.authorize("updateReply", _vm.reply),
-                expression: "authorize('updateReply',reply)"
-              }
-            ]
-          },
-          [
+      _vm.authorize("owns", _vm.reply) ||
+      _vm.authorize("owns", _vm.reply.thread)
+        ? _c("div", { staticClass: "card-footer d-flex" }, [
             _c(
-              "button",
+              "div",
               {
-                staticClass: "btn btn-sm btn-outline-secondary mr-1",
-                on: {
-                  click: function($event) {
-                    _vm.editing = true
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.authorize("owns", _vm.reply),
+                    expression: "authorize('owns',reply)"
                   }
-                }
+                ]
               },
-              [_vm._v("Edit")]
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-outline-secondary mr-1",
+                    on: {
+                      click: function($event) {
+                        _vm.editing = true
+                      }
+                    }
+                  },
+                  [_vm._v("Edit")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-danger btn-sm",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        return _vm.destroy()
+                      }
+                    }
+                  },
+                  [_vm._v("Delete")]
+                )
+              ]
             ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-outline-danger btn-sm",
-                attrs: { type: "submit" },
-                on: {
-                  click: function($event) {
-                    return _vm.destroy()
-                  }
-                }
-              },
-              [_vm._v("Delete")]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.isBest,
-                expression: "! isBest"
-              }
-            ],
-            staticClass: "btn btn-outline-secondary btn-sm ml-auto",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                return _vm.markAsBest()
-              }
-            }
-          },
-          [_vm._v("Best Reply?")]
-        )
-      ])
+            _vm.authorize("owns", _vm.reply.thread)
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-secondary btn-sm ml-auto",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.markAsBest()
+                      }
+                    }
+                  },
+                  [_vm._v("Best Reply?")]
+                )
+              : _vm._e()
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -70533,8 +70530,9 @@ var app = new Vue({
 
 var user = window.App.user;
 var authorizations = {
-  updateReply: function updateReply(reply) {
-    return reply.user_id === user.id;
+  owns: function owns(model) {
+    var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
+    return model[prop] === user.id;
   }
 };
 module.exports = authorizations;
