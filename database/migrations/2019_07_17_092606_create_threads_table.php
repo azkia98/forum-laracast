@@ -17,6 +17,7 @@ class CreateThreadsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->string('title');
+            $table->boolean('locked')->default(false);
             $table->unsignedBigInteger('best_reply_id')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->unsignedBigInteger('channel_id');

@@ -181,4 +181,9 @@ class Thread extends Model
 
         return $this->save();
     }
+
+    public function lock()
+    {
+        $this->update(['locked' => true]);
+    }
 }
