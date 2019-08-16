@@ -43,13 +43,24 @@ class LockThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread');
-
-        $thread->lock();
-
+        $thread = create('App\Thread',['locked' => true]);
+        
         $this->post($thread->path() . '/replies', [
             'body' => 'Foobar',
             'user_id' => auth()->id()
         ])->assertStatus(Response::HTTP_LOCKED);
+    }
+
+    /** @test */
+    public function administrators_can_unlock_threads()
+    {
+        $this->signIn(create('App\User',['admin' => true]));
+
+        $thread = create('App\Thread', ['user_id' => auth()->id(), 'locked' => true]);
+
+        $this->delete(route('locked-thread.destroy', $thread));
+
+        $this->assertFalse($thread->fresh()->locked);
+
     }
 }

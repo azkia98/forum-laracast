@@ -25,6 +25,7 @@ Route::get('/threads/{channel}/{thread}','ThreadsController@show');
 Route::delete('/threads/{channel}/{thread}','ThreadsController@destroy');
 Route::post('/threads','ThreadsController@store')->middleware('must-be-confirmed');
 Route::post('locked_threads/{thread}','LockedThreadsController@store')->name('locked-thread.store')->middleware('admin');
+Route::delete('locked_threads/{thread}','LockedThreadsController@destroy')->name('locked-thread.destroy')->middleware('admin');
 
 #subscribe
 Route::post('/threads/{channel}/{thread}/subscriptions','ThreadSubscriptionsController@store')->middleware('auth');

@@ -104,7 +104,7 @@ class ThreadsController extends Controller
 
 
         return view('threads.show', [
-            'thread' => $thread,
+            'thread' => $thread->load('replies'),
         ]);
     }
 

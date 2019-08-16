@@ -3716,16 +3716,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['dataRepliesCount', 'dataLocked'],
+  props: ["thread"],
   data: function data() {
     return {
-      repliesCount: this.dataRepliesCount,
-      locked: this.dataLocked
+      repliesCount: this.thread.replies_count,
+      locked: this.thread.locked
     };
   },
   components: {
     Replies: _components_Replies__WEBPACK_IMPORTED_MODULE_0__["default"],
     SubscribeButton: _components_SubscribeButton__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  methods: {
+    lockToggle: function lockToggle() {
+      axios[this.locked ? 'delete' : 'post']("/locked_threads/".concat(thread.slug));
+      this.locked = !this.locked;
+    }
   }
 });
 
