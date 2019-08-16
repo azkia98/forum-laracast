@@ -3450,6 +3450,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -3712,10 +3716,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['initialRepliesCount'],
+  props: ['dataRepliesCount', 'dataLocked'],
   data: function data() {
     return {
-      repliesCount: this.initialRepliesCount
+      repliesCount: this.dataRepliesCount,
+      locked: this.dataLocked
     };
   },
   components: {
@@ -58026,7 +58031,17 @@ var render = function() {
         on: { changed: _vm.fetch }
       }),
       _vm._v(" "),
-      _c("new-reply", { on: { created: _vm.add } })
+      _vm.$parent.locked
+        ? _c("p", { staticClass: "text-muted mt-2 text-center" }, [
+            _vm._v(
+              "\n       This thread has been locked. No more replies are allowed.\n   "
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.$parent.locked
+        ? _c("new-reply", { on: { created: _vm.add } })
+        : _vm._e()
     ],
     2
   )
@@ -70533,6 +70548,9 @@ var authorizations = {
   owns: function owns(model) {
     var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
     return model[prop] === user.id;
+  },
+  admin: function admin() {
+    return !!user.admin;
   }
 };
 module.exports = authorizations;

@@ -3,10 +3,11 @@ import Replies from '../components/Replies';
 import SubscribeButton from '../components/SubscribeButton';
 
 export default {
-    props : ['initialRepliesCount'],
+    props : ['dataRepliesCount','dataLocked'],
     data(){
         return {
-            repliesCount: this.initialRepliesCount
+            repliesCount: this.dataRepliesCount,
+            locked: this.dataLocked,
         };
     },
    components:{
