@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Trending;
+use Zttp\Zttp;
 
 class ThreadsController extends Controller
 {
@@ -60,14 +61,25 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($_SERVER['REMOTE_ADDR']);
+        
         $request->validate([
             'title' => 'required|spamfree',
             'body' => 'required|spamfree',
             'channel_id' => 'required|exists:channels,id',
         ]);
 
+        $response = Zttp::asFormParams()->post('https://www.google.com/recaptcha/api/siteverify',[
+            'secret' => config('services.recaptcha.secret'),
+            'response' => $request->recaptcha_res,
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        ]);
 
+        // dd($request->recaptcha_res);
+
+        if(!$response->json()['success']){
+            return response('You are bot :)',403);
+        }
 
         $thread = Thread::create([
             'body' => $request->body,

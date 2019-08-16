@@ -43,6 +43,6 @@
     </div>
 </body>
 
-@yield('section')
+@yield('scripts')
 </html>
 
