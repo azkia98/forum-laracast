@@ -59,9 +59,9 @@ class ThreadsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request ,Recaptcha $recaptcha)
+    public function store(Request $request, Recaptcha $recaptcha)
     {
-        
+
         $request->validate([
             'title' => 'required|spamfree',
             'body' => 'required|spamfree',
@@ -78,9 +78,8 @@ class ThreadsController extends Controller
             // 'slug' => $request->title
         ]);
 
-        if($request->wantsJson())
-        {
-            return response($thread->fresh(),201);
+        if ($request->wantsJson()) {
+            return response($thread->fresh(), 201);
         }
 
 
@@ -127,9 +126,15 @@ class ThreadsController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update(Request $request, $channelId, Thread $thread)
     {
-        //
+        $this->authorize('update',$thread);
+        $request->validate([
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
+        ]);
+
+        $thread->update(['title' => $request->title,'body' => $request->body]);
     }
 
     /**
