@@ -3720,17 +3720,43 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       repliesCount: this.thread.replies_count,
-      locked: this.thread.locked
+      locked: this.thread.locked,
+      title: this.thread.title,
+      body: this.thread.body,
+      form: {},
+      editing: false
     };
   },
   components: {
     Replies: _components_Replies__WEBPACK_IMPORTED_MODULE_0__["default"],
     SubscribeButton: _components_SubscribeButton__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
+  created: function created() {
+    this.resetForm();
+  },
   methods: {
     lockToggle: function lockToggle() {
       axios[this.locked ? 'delete' : 'post']("/locked_threads/".concat(thread.slug));
       this.locked = !this.locked;
+    },
+    resetForm: function resetForm() {
+      this.form = {
+        title: this.thread.title,
+        body: this.thread.body
+      };
+      this.editing = false;
+    },
+    update: function update() {
+      var _this = this;
+
+      var uri = "/threads/".concat(this.thread.channel.slug, "/").concat(this.thread.slug);
+      axios.patch(uri, this.form).then(function (res) {
+        flash('Your thread has been updated.');
+        _this.title = _this.form.title;
+        _this.body = _this.form.body;
+
+        _this.resetForm();
+      });
     }
   }
 });

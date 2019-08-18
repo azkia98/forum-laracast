@@ -9,44 +9,14 @@
 @endsection
 
 @section('content')
-<thread-view :thread="{{ $thread }}" inline-template>
+<thread-view :thread="{{ $thread }}" inline-template v-cloak>
 
     <div class="container">
         <div class="row ">
             <div class="col-md-8">
-                <div class="card mb-1">
-                    <div class="card-header d-flex justify-content-between  align-items-center">
 
-                        <div class="d-flex align-items-center">
-                            <div class="mr-2">
-                                <img src="{{ $thread->creator->avatar }}" alt="" width="25" height="25">
-                            </div>
-                            <div>
-                                <a href="{{ route('profiles', $thread->creator) }}">{{ $thread->creator->name }}</a>
-                                posted at: {{ $thread->created_at->diffForHumans() }}
-                            </div>
-                        </div>
-                        <div>
-                            @can('update', $thread)
-                            <form class="form-inline" method="post" action="{{ $thread->path() }}">
-                                @csrf
-                                @method('DELETE')
+                @include('threads._question')
 
-                                <button type="submit" class="btn btn-link">Delete</button>
-                            </form>
-                            @endcan
-                        </div>
-                    </div>
-
-                    <div class="card-body">
-                        <article>
-                            <h4>
-                                {{ $thread->title }}
-                            </h4>
-                            <div class="body">{{ $thread->body }}</div>
-                        </article>
-                    </div>
-                </div>
 
                 <replies @removed="repliesCount--" @added="repliesCount++"></replies>
 
