@@ -3,13 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Redis;
 use App\Trending;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TrendingThreadsTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public $trending;
 

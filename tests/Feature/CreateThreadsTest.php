@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Rules\Recaptcha;
 use App\Thread;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 
 class CreateThreadsTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $thread;
 
